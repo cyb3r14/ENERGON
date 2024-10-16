@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENERGON</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #282828;
+            color: #ebdbb2;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #3c3836;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1, h2, h3 {
+            margin: 0;
+        }
+
+        main {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .data-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .data-card {
+            background-color: #504945;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 600px) {
+            .data-section {
+                flex-direction: column;
+            }
+
+            .data-card {
+                margin: 0 10px;             }
+        }
+
+        footer {
+            background-color: #3c3836;
+            color: #ebdbb2;
+            text-align: center;
+            padding: 10px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ENERGON</h1>
+    </header>
+    <main>
+        <section class="data-section">
+            <h2>Información</h2>
+            <div class="data-card">
+                <h3>Voltios de la bateria</h3>
+                <p><span id="voltios"></span></p>
+            </div>
+            <div class="data-card">
+                <h3>Porcentaje de la bateria</h3>
+                <p><span id="percentage"></span></p>
+            </div>
+            <div class="data-card">
+                <h3>Status</h3>
+                <p id="status"></p>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Edgar Omar Flores Delgado & Julio Cesar Mendoza Isidoro</p>
+    </footer>
+</body>
+<script>
+  
+function fetchData() {
+    fetch('/getData') 
+    .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.volts == 0) {
+              return;
+            }
+            document.getElementById('voltios').innerText = data.volts + " V"; 
+            document.getElementById('percentage').innerText = data.percentage + "%";
+            document.getElementById('status').innerText = data.status;
+        })
+        .catch(error => {
+            console.error('Hubo un problema con la operación fetch:', error);
+            document.getElementById('voltios').innerText = "Error al obtener datos";
+            document.getElementById('percentage').innerText = "Error al obtener datos";
+            document.getElementById('status').innerText = "Error al obtener datos";
+        });
+}
+
+setInterval(fetchData, 2000);
+
+fetchData();
+</script>
+</html>
+
